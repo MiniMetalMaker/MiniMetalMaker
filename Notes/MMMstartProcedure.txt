@@ -1,0 +1,13 @@
+;<-- Mini Metal Maker Start Procedure -->
+G21 ; set units to millimeters
+G28 ; home all axes
+G90 ; use absolute coordinates
+G92 E0
+M82 ; use absolute distances for extrusion
+G1 Z0.7 F5000 ; lift nozzle to printing start height
+G92 Z0
+G1 Z0.5 ; raise tip enough for pressurization flow to begin
+G1 X70.000 ; offset from X to do the pressurization procedure
+G1 X0.000, F1800.000 E8.00000 ; return to home while pressurizing
+G92 E0 ; set pressurized state as the zero reference for extruder
+;<--end Mini Metal Maker Start Procedure -->
