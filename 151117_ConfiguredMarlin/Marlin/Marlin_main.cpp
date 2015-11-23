@@ -407,6 +407,8 @@ boolean chdkActive = false;
 void get_arc_coordinates();
 bool setTargetedHotend(int code);
 
+void serial_echopair_P(const char *s_P, int v)
+    { serialprintPGM(s_P); SERIAL_ECHO(v); }
 void serial_echopair_P(const char *s_P, float v)
     { serialprintPGM(s_P); SERIAL_ECHO(v); }
 void serial_echopair_P(const char *s_P, double v)
