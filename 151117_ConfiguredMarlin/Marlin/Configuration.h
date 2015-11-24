@@ -34,6 +34,8 @@
 // Please choose the name from boards.h that matches your setup
 #ifndef MOTHERBOARD
   #define MOTHERBOARD BOARD_RAMPS_13_EFB
+  #define MMM_ADVANCE_PIN A3	// The pin for our extrusion advance knob, value read from
+  				// pin is used as a multiplier for extrusion
 #endif
 
 // Define this to set a custom name for your generic Mendel,
