@@ -169,6 +169,7 @@
 // M503 - print the current settings (from memory not from EEPROM)
 // M540 - Use S[0|1] to enable or disable the stop SD card print on endstop hit (requires ABORT_ON_ENDSTOP_HIT_FEATURE_ENABLED)
 // M600 - Pause for filament change X[pos] Y[pos] Z[relative lift] E[initial retract] L[later retract distance for removal]
+// M610 - Pause for clay change X[pos] Y[pos] Z[relative lift] E[initial retract] L[later retract distance for removal]
 // M665 - set delta configurations
 // M666 - set delta endstop adjustment
 // M605 - Set dual x-carriage movement mode: S<mode> [ X<duplication x-offset> R<duplication temp offset> ]
