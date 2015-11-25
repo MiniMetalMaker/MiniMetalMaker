@@ -119,6 +119,78 @@ static long x_segment_time[3]={MAX_FREQ_TIME + 1,0,0};     // Segment times (in 
 static long y_segment_time[3]={MAX_FREQ_TIME + 1,0,0};
 #endif
 
+#ifdef MMM_KNOB_PIN
+int mmm_get_knob_value() {
+    return analogRead(MMM_KNOB_PIN);
+
+}
+
+float mmm_get_knob_multiplier() {
+    int knob_value = mmm_get_knob_value();
+    float km = 0.01;
+    if (knob_value >= 1 && knob_value <= 123) {
+    	km = 1.1;
+    } else if (knob_value >= 124 && knob_value <= 223) {
+    	km = 1.2;
+    } else if (knob_value >= 224 && knob_value <= 323) {
+    	km = 1.3;
+    } else if (knob_value >= 324 && knob_value <= 423) {
+    	km = 1.4;
+    } else if (knob_value >= 424 && knob_value <= 523) {
+    	km = 1.5;
+    } else if (knob_value >= 524 && knob_value <= 623) {
+    	km = 1.6;
+    } else if (knob_value >= 624 && knob_value <= 723) {
+    	km = 1.7;
+    } else if (knob_value >= 724 && knob_value <= 823) {
+    	km = 1.8;
+    } else if (knob_value >= 824 && knob_value <= 923) {
+    	km = 1.9;
+    } else if (knob_value >= 924 && knob_value <= 1023) {
+    	km = 1.99;
+    }
+
+    SERIAL_ECHO_START;
+    SERIAL_ECHOPAIR("knob multiplier: ", km);
+    SERIAL_ECHOLN("");
+
+    return km;
+}
+
+int mmm_get_knob_steps() {
+    int knob_value = mmm_get_knob_value();
+    int ks = 0;
+    if (knob_value >= 1 && knob_value <= 123) {
+    	ks = 2;
+    } else if (knob_value >= 124 && knob_value <= 223) {
+    	ks = 4;
+    } else if (knob_value >= 224 && knob_value <= 323) {
+    	ks = 8;
+    } else if (knob_value >= 324 && knob_value <= 423) {
+    	ks = 16;
+    } else if (knob_value >= 424 && knob_value <= 523) {
+    	ks = 32;
+    } else if (knob_value >= 524 && knob_value <= 623) {
+    	ks = 64;
+    } else if (knob_value >= 624 && knob_value <= 723) {
+    	ks = 128;
+    } else if (knob_value >= 724 && knob_value <= 823) {
+    	ks = 256;
+    } else if (knob_value >= 824 && knob_value <= 923) {
+    	ks = 512;
+    } else if (knob_value >= 924 && knob_value <= 1023) {
+    	ks = 1024;
+    }
+
+    SERIAL_ECHO_START;
+    SERIAL_ECHOPAIR("knob steps: ", ks);
+    SERIAL_ECHOLN("");
+
+    return ks;
+
+}
+#endif
+
 #ifdef FILAMENT_SENSOR
  static char meas_sample; //temporary variable to hold filament measurement sample
 #endif
@@ -601,6 +673,9 @@ block->steps_y = labs((target[X_AXIS]-position[X_AXIS]) - (target[Y_AXIS]-positi
   block->steps_e = labs(target[E_AXIS]-position[E_AXIS]);
   block->steps_e *= volumetric_multiplier[active_extruder];
   block->steps_e *= extrudemultiply;
+#ifdef MMM_KNOB_PIN
+  block->steps_e *= mmm_get_knob_multiplier();
+#endif
   block->steps_e /= 100;
   block->step_event_count = max(block->steps_x, max(block->steps_y, max(block->steps_z, block->steps_e)));
 
