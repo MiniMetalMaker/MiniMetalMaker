@@ -451,6 +451,13 @@ const unsigned int dropsegments=5; //everything with less than this number of st
   #ifdef EXTRUDER_RUNOUT_PREVENT
     #error EXTRUDER_RUNOUT_PREVENT currently incompatible with FILAMENTCHANGE
   #endif
+  #ifdef FILAMENTCHANGEENABLE
+    #define FILAMENTCHANGE_XPOS 3
+    #define FILAMENTCHANGE_YPOS 3
+    #define FILAMENTCHANGE_ZADD 10
+    #define FILAMENTCHANGE_FIRSTRETRACT -2
+    #define FILAMENTCHANGE_FINALRETRACT -100
+  #endif
 #endif
 
 //===========================================================================
