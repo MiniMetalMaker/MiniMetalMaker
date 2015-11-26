@@ -15,6 +15,13 @@
 
 //#define STRING_VERSION "1.0.2"
 
+#define MMM
+//#define MMM_DEBUG // Comment this out to enable debug messages for MMM
+
+#ifdef MMM
+#define MMM_KNOB_PIN A3	// The pin for our pot, value read from pin is used as a multiplier for extrusion
+#endif
+
 #define STRING_VERSION_CONFIG_H __DATE__ " " __TIME__ // build date and time
 #define STRING_CONFIG_H_AUTHOR "(none, default config)" // Who made the changes.
 
@@ -34,7 +41,6 @@
 // Please choose the name from boards.h that matches your setup
 #ifndef MOTHERBOARD
   #define MOTHERBOARD BOARD_RAMPS_13_EFB
-  #define MMM_KNOB_PIN A3	// The pin for our pot, value read from pin is used as a multiplier for extrusion
 #endif
 
 // Define this to set a custom name for your generic Mendel,

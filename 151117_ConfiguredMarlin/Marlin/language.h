@@ -126,6 +126,17 @@
 #define MSG_ENDSTOP_OPEN                    "open"
 #define MSG_HOTEND_OFFSET                   "Hotend offsets:"
 
+#ifdef MMM
+#define MSG_M619_REPORT			    "Reprting MiniMetalMaker extras status"
+#define MSG_UPSTOP			    "upper_endstop: "
+#define MSG_UPSTOP_HIT			    "TRIGGERED"
+#define MSG_UPSTOP_OPEN			    "open"
+#define MSG_PISTON			    "piston: "
+#define MSG_PISTON_HIT			    "TRIGGERED"
+#define MSG_PISTON_OPEN			    "open"
+#define MSG_KNOB			    "Knob value: "
+#endif
+
 #define MSG_SD_CANT_OPEN_SUBDIR             "Cannot open subdir"
 #define MSG_SD_INIT_FAIL                    "SD init fail"
 #define MSG_SD_VOL_INIT_FAIL                "volume.init failed"

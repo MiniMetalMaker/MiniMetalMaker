@@ -298,16 +298,17 @@ FORCE_INLINE void trapezoid_generator_reset() {
   acceleration_time = calc_timer(acc_step_rate);
   OCR1A = acceleration_time;
 
-//    SERIAL_ECHO_START;
-//    SERIAL_ECHOPGM("advance :");
-//    SERIAL_ECHO(current_block->advance/256.0);
-//    SERIAL_ECHOPGM("advance rate :");
-//    SERIAL_ECHO(current_block->advance_rate/256.0);
-//    SERIAL_ECHOPGM("initial advance :");
-//  SERIAL_ECHO(current_block->initial_advance/256.0);
-//    SERIAL_ECHOPGM("final advance :");
-//    SERIAL_ECHOLN(current_block->final_advance/256.0);
-
+/*
+    SERIAL_ECHO_START;
+    SERIAL_ECHOPGM("advance :");
+    SERIAL_ECHOLN(current_block->advance/256.0);
+    SERIAL_ECHOPGM("advance rate :");
+    SERIAL_ECHOLN(current_block->advance_rate/256.0);
+    SERIAL_ECHOPGM("initial advance :");
+    SERIAL_ECHOLN(current_block->initial_advance/256.0);
+    SERIAL_ECHOPGM("final advance :");
+    SERIAL_ECHOLN(current_block->final_advance/256.0);
+*/
 }
 
 // "The Stepper Driver Interrupt" - This timer interrupt is the workhorse.
@@ -347,7 +348,6 @@ ISR(TIMER1_COMPA_vect)
   if (current_block != NULL) {
     // Set directions TO DO This should be done once during init of trapezoid. Endstops -> interrupt
     out_bits = current_block->direction_bits;
-
 
     // Set the direction bits (X_AXIS=A_AXIS and Y_AXIS=B_AXIS for COREXY)
     if((out_bits & (1<<X_AXIS))!=0){
@@ -895,6 +895,13 @@ void st_init()
   #endif
 
   //endstops and pullups
+
+  #if defined(MMM)
+  SET_INPUT(E_UPSTOP_PIN);
+  SET_INPUT(E_PISTON_PIN);
+  WRITE(E_UPSTOP_PIN,HIGH);
+  WRITE(E_PISTON_PIN,HIGH);
+  #endif
 
   #if defined(X_MIN_PIN) && X_MIN_PIN > -1
     SET_INPUT(X_MIN_PIN);

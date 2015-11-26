@@ -119,7 +119,7 @@ static long x_segment_time[3]={MAX_FREQ_TIME + 1,0,0};     // Segment times (in 
 static long y_segment_time[3]={MAX_FREQ_TIME + 1,0,0};
 #endif
 
-#ifdef MMM_KNOB_PIN
+#ifdef MMM
 int mmm_get_knob_value() {
     return analogRead(MMM_KNOB_PIN);
 
@@ -129,30 +129,32 @@ float mmm_get_knob_multiplier() {
     int knob_value = mmm_get_knob_value();
     float km = 0.01;
     if (knob_value >= 1 && knob_value <= 123) {
-    	km = 1.1;
+    	km = 1.01;
     } else if (knob_value >= 124 && knob_value <= 223) {
-    	km = 1.2;
+    	km = 1.02;
     } else if (knob_value >= 224 && knob_value <= 323) {
-    	km = 1.3;
+    	km = 1.03;
     } else if (knob_value >= 324 && knob_value <= 423) {
-    	km = 1.4;
+    	km = 1.04;
     } else if (knob_value >= 424 && knob_value <= 523) {
-    	km = 1.5;
+    	km = 1.05;
     } else if (knob_value >= 524 && knob_value <= 623) {
-    	km = 1.6;
+    	km = 1.06;
     } else if (knob_value >= 624 && knob_value <= 723) {
-    	km = 1.7;
+    	km = 1.07;
     } else if (knob_value >= 724 && knob_value <= 823) {
-    	km = 1.8;
+    	km = 1.08;
     } else if (knob_value >= 824 && knob_value <= 923) {
-    	km = 1.9;
+    	km = 1.09;
     } else if (knob_value >= 924 && knob_value <= 1023) {
-    	km = 1.99;
+    	km = 1.1;
     }
 
+#ifdef MMM_DEBUG
     SERIAL_ECHO_START;
     SERIAL_ECHOPAIR("knob multiplier: ", km);
     SERIAL_ECHOLN("");
+#endif
 
     return km;
 }
@@ -182,9 +184,11 @@ int mmm_get_knob_steps() {
     	ks = 1024;
     }
 
+#ifdef MMM_DEBUG
     SERIAL_ECHO_START;
     SERIAL_ECHOPAIR("knob steps: ", ks);
     SERIAL_ECHOLN("");
+#endif
 
     return ks;
 
@@ -673,7 +677,7 @@ block->steps_y = labs((target[X_AXIS]-position[X_AXIS]) - (target[Y_AXIS]-positi
   block->steps_e = labs(target[E_AXIS]-position[E_AXIS]);
   block->steps_e *= volumetric_multiplier[active_extruder];
   block->steps_e *= extrudemultiply;
-#ifdef MMM_KNOB_PIN
+#ifdef MMM
   block->steps_e *= mmm_get_knob_multiplier();
 #endif
   block->steps_e /= 100;
@@ -1080,6 +1084,7 @@ Having the real displacement of the head, we can calculate the total movement le
     float advance = (STEPS_PER_CUBIC_MM_E * EXTRUDER_ADVANCE_K) * 
       (current_speed[E_AXIS] * current_speed[E_AXIS] * EXTRUSION_AREA * EXTRUSION_AREA)*256;
     block->advance = advance;
+
     if(acc_dist == 0) {
       block->advance_rate = 0;
     } 
@@ -1087,10 +1092,11 @@ Having the real displacement of the head, we can calculate the total movement le
       block->advance_rate = advance / (float)acc_dist;
     }
   }
-  /*
-    SERIAL_ECHO_START;
+
+/*
+   SERIAL_ECHO_START;
    SERIAL_ECHOPGM("advance :");
-   SERIAL_ECHO(block->advance/256.0);
+   SERIAL_ECHOLN(block->advance/256.0);
    SERIAL_ECHOPGM("advance rate :");
    SERIAL_ECHOLN(block->advance_rate/256.0);
    */

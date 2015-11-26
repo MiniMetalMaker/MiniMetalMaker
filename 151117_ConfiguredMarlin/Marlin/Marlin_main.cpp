@@ -202,6 +202,13 @@
 #ifdef SDSUPPORT
 CardReader card;
 #endif
+
+#ifdef MMM
+bool mmm_601_ran = false;
+float mmm_target[4];
+float mmm_lastpos[4];
+#endif
+
 float homing_feedrate[] = HOMING_FEEDRATE;
 bool axis_relative_modes[] = AXIS_RELATIVE_MODES;
 int feedmultiply=100; //100->1 200->2

@@ -17,6 +17,11 @@
 #define DIGIPOTSS_PIN -1
 #endif
 
+#ifdef MMM
+#define E_UPSTOP_PIN	    40 //40 
+#define E_PISTON_PIN	    42
+#endif
+
 /****************************************************************************************
 * 5DPrint D8 Driver board
 * https://bitbucket.org/makible/5dprint-d8-controller-board
@@ -878,6 +883,7 @@
 #define LED_PIN            13
 #define PS_ON_PIN          -1
 #define KILL_PIN           -1
+
 
 #ifdef RAMPS_V_1_0 // RAMPS_V_1_0
   #define HEATER_0_PIN     12    // RAMPS 1.0
