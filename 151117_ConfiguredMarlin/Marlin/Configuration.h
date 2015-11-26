@@ -16,7 +16,7 @@
 //#define STRING_VERSION "1.0.2"
 
 #define MMM
-//#define MMM_DEBUG // Comment this out to enable debug messages for MMM
+#define MMM_DEBUG // Comment this out to enable debug messages for MMM
 
 #ifdef MMM
 #define MMM_KNOB_PIN A3	// The pin for our pot, value read from pin is used as a multiplier for extrusion

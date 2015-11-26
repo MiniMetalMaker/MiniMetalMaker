@@ -171,6 +171,7 @@
 // M600 - Pause for filament change X[pos] Y[pos] Z[relative lift] E[initial retract] L[later retract distance for removal]
 // M601 - Clay unload - same as pause for filament change, but wait for M602 before starting again.
 // M602 - Clay load - take values from M601 and set positionsto them
+// M603 - Clay bath - Move x,y,z to position over bath cap, then take a dip!
 // M619 - Get status for extra items on Mini Metal Maker
 // M665 - set delta configurations
 // M666 - set delta endstop adjustment
@@ -3808,6 +3809,41 @@ case 404:  //M404 Enter the nominal filament width (3mm, 1.75mm ) N<3.0> or disp
 
     }
     break;
+    case 603: // Bath time!
+    {
+        disable_e0();
+        disable_e1();
+        disable_e2();
+
+	float target[4];
+	//float lastpos[4];
+	target[X_AXIS]=current_position[X_AXIS];
+	target[Y_AXIS]=current_position[Y_AXIS];
+	target[Z_AXIS]=current_position[Z_AXIS];
+	target[E_AXIS]=current_position[E_AXIS];
+	//lastpos[X_AXIS]=current_position[X_AXIS];
+	//lastpos[Y_AXIS]=current_position[Y_AXIS];
+	//lastpos[Z_AXIS]=current_position[Z_AXIS];
+	//lastpos[E_AXIS]=current_position[E_AXIS];
+
+	HOMEAXIS(X);
+	HOMEAXIS(Y);
+	//HOMEAXIS(Z);
+
+	// Lift our Z
+	target[Z_AXIS] -= 5;
+	// Move Y
+	target[Y_AXIS] = 80;
+	plan_buffer_line(target[X_AXIS], target[Y_AXIS], target[Z_AXIS], target[E_AXIS], feedrate/60, active_extruder);
+	st_synchronize();
+
+	delay(100);
+
+	// Lower Z
+	target[Z_AXIS] += 15;
+	plan_buffer_line(target[X_AXIS], target[Y_AXIS], target[Z_AXIS], target[E_AXIS], feedrate/60, active_extruder);
+	st_synchronize();
+    }
 #endif
     #endif //FILAMENTCHANGEENABLE
     #ifdef DUAL_X_CARRIAGE
