@@ -169,6 +169,9 @@
 // M503 - print the current settings (from memory not from EEPROM)
 // M540 - Use S[0|1] to enable or disable the stop SD card print on endstop hit (requires ABORT_ON_ENDSTOP_HIT_FEATURE_ENABLED)
 // M600 - Pause for filament change X[pos] Y[pos] Z[relative lift] E[initial retract] L[later retract distance for removal]
+// M601 - Clay unload - same as pause for filament change, but wait for M602 before starting again.
+// M602 - Clay load - take values from M601 and set positionsto them
+// M619 - Get status for extra items on Mini Metal Maker
 // M665 - set delta configurations
 // M666 - set delta endstop adjustment
 // M605 - Set dual x-carriage movement mode: S<mode> [ X<duplication x-offset> R<duplication temp offset> ]
@@ -2796,6 +2799,15 @@ Sigma_Exit:
     case 121: // M121
       enable_endstops(true) ;
       break;
+    case 619: // M619
+    SERIAL_PROTOCOLLN(MSG_M619_REPORT);
+        SERIAL_PROTOCOLPGM(MSG_UPSTOP);
+        SERIAL_PROTOCOLLN(((READ(E_UPSTOP_PIN))?MSG_UPSTOP_HIT:MSG_UPSTOP_OPEN));
+        SERIAL_PROTOCOLPGM(MSG_PISTON);
+        SERIAL_PROTOCOLLN(((READ(E_PISTON_PIN)^true)?MSG_PISTON_HIT:MSG_PISTON_OPEN));
+        SERIAL_PROTOCOLPGM(MSG_KNOB);
+        SERIAL_PROTOCOLLN(analogRead(MMM_KNOB_PIN));
+      break;
     case 119: // M119
     SERIAL_PROTOCOLLN(MSG_M119_REPORT);
       #if defined(X_MIN_PIN) && X_MIN_PIN > -1
@@ -3685,6 +3697,115 @@ case 404:  //M404 Enter the nominal filament width (3mm, 1.75mm ) N<3.0> or disp
         plan_buffer_line(lastpos[X_AXIS], lastpos[Y_AXIS], lastpos[Z_AXIS], lastpos[E_AXIS], feedrate/60, active_extruder); //final untretract
     }
     break;
+#ifdef MMM
+    case 601:
+    {
+    	if (! mmm_601_ran) {
+    	  mmm_601_ran = true;
+	  mmm_target[X_AXIS]=current_position[X_AXIS];
+	  mmm_target[Y_AXIS]=current_position[Y_AXIS];
+	  mmm_target[Z_AXIS]=current_position[Z_AXIS];
+	  //mmm_target[E_AXIS]=current_position[E_AXIS];
+	  mmm_lastpos[X_AXIS]=current_position[X_AXIS];
+	  mmm_lastpos[Y_AXIS]=current_position[Y_AXIS];
+	  mmm_lastpos[Z_AXIS]=current_position[Z_AXIS];
+	  //mmm_lastpos[E_AXIS]=current_position[E_AXIS];
+
+	  /*
+          if(code_seen('E'))
+          {
+            mmm_target[E_AXIS]+= code_value();
+          }
+          else
+          {
+            #ifdef FILAMENTCHANGE_FIRSTRETRACT
+              mmm_target[E_AXIS]+= FILAMENTCHANGE_FIRSTRETRACT ;
+            #endif
+          }
+          plan_buffer_line(mmm_target[X_AXIS], mmm_target[Y_AXIS], mmm_target[Z_AXIS], mmm_target[E_AXIS], feedrate/60, active_extruder);
+	  */
+
+          //lift Z
+          if(code_seen('Z'))
+          {
+            mmm_target[Z_AXIS]+= code_value();
+          }
+          else
+          {
+            #ifdef FILAMENTCHANGE_ZADD
+              mmm_target[Z_AXIS]+= FILAMENTCHANGE_ZADD ;
+            #endif
+          }
+          plan_buffer_line(mmm_target[X_AXIS], mmm_target[Y_AXIS], mmm_target[Z_AXIS], mmm_target[E_AXIS], feedrate/60, active_extruder);
+
+	  // After we retract our retract value, keep retracting until we hit our extruder stop.
+	  while(!READ(E_UPSTOP_PIN)) {
+            mmm_target[E_AXIS] -= 5;
+            plan_buffer_line(mmm_target[X_AXIS], mmm_target[Y_AXIS], mmm_target[Z_AXIS], mmm_target[E_AXIS], feedrate/60, active_extruder);
+    	    st_synchronize();
+	  }
+
+	  /*
+          if(code_seen('L'))
+          {
+            mmm_target[E_AXIS]+= code_value();
+          }
+          else
+          {
+            #ifdef FILAMENTCHANGE_FINALRETRACT
+              mmm_target[E_AXIS]+= FILAMENTCHANGE_FINALRETRACT ;
+            #endif
+          }
+	  */
+
+          //plan_buffer_line(mmm_target[X_AXIS], mmm_target[Y_AXIS], mmm_target[Z_AXIS], mmm_target[E_AXIS], feedrate/60, active_extruder);
+
+          //finish moves
+          //st_synchronize();
+	} else {
+          SERIAL_ECHO_START;
+          SERIAL_ECHOLN("M601 has already ran.");
+	}
+
+    }
+    break;
+    case 602:
+    {
+    	if (mmm_601_ran) {
+          /*if(code_seen('L'))
+          {
+            mmm_target[E_AXIS]+= -code_value();
+          }
+          else
+          {
+            #ifdef FILAMENTCHANGE_FINALRETRACT
+              mmm_target[E_AXIS]+=(-1)*FILAMENTCHANGE_FINALRETRACT ;
+            #endif
+          }
+	  */
+	  // 
+	  while(READ(E_PISTON_PIN)) {
+            mmm_target[E_AXIS] += 5;
+            plan_buffer_line(mmm_target[X_AXIS], mmm_target[Y_AXIS], mmm_target[Z_AXIS], mmm_target[E_AXIS], feedrate/60, active_extruder);
+    	    st_synchronize();
+	  }
+
+          plan_buffer_line(mmm_target[X_AXIS], mmm_target[Y_AXIS], mmm_target[Z_AXIS], mmm_target[E_AXIS], feedrate/60, active_extruder); //should do nothing
+          plan_buffer_line(mmm_lastpos[X_AXIS], mmm_lastpos[Y_AXIS], mmm_target[Z_AXIS], mmm_target[E_AXIS], feedrate/60, active_extruder); //move xy back
+          plan_buffer_line(mmm_lastpos[X_AXIS], mmm_lastpos[Y_AXIS], mmm_lastpos[Z_AXIS], mmm_target[E_AXIS], feedrate/60, active_extruder); //move z back
+          //plan_buffer_line(mmm_lastpos[X_AXIS], mmm_lastpos[Y_AXIS], mmm_lastpos[Z_AXIS], mmm_lastpos[E_AXIS], feedrate/60, active_extruder); //final untretract
+          st_synchronize();
+	} else {
+          SERIAL_ECHO_START;
+          SERIAL_ECHOLN("M601 needs to be ran first.");
+	}
+
+	// Don't run twice
+	mmm_601_ran = false;
+
+    }
+    break;
+#endif
     #endif //FILAMENTCHANGEENABLE
     #ifdef DUAL_X_CARRIAGE
     case 605: // Set dual x-carriage movement mode:
