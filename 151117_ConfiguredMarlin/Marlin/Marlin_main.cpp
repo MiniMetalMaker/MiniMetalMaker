@@ -3648,12 +3648,13 @@ case 404:  //M404 Enter the nominal filament width (3mm, 1.75mm ) N<3.0> or disp
         //finish moves
         st_synchronize();
         //disable extruder steppers so filament can be removed
+        delay(100);
+        uint8_t cnt=0;
         disable_e0();
         disable_e1();
         disable_e2();
-        delay(100);
+	#ifdef ULTIPANEL
         LCD_ALERTMESSAGEPGM(MSG_FILAMENTCHANGE);
-        uint8_t cnt=0;
         while(!lcd_clicked()){
           cnt++;
           manage_heater();
@@ -3677,6 +3678,8 @@ case 404:  //M404 Enter the nominal filament width (3mm, 1.75mm ) N<3.0> or disp
           #endif
           }
         }
+	#else
+	#endif
 
         //return to normal
         if(code_seen('L'))
