@@ -1,5 +1,3 @@
 - Need to figure out proper sequence for M601/M602 - if M602 isn't called we don't resume print properly.
 Might need to move the M602 stuff into M601 and add a big delay or something. Or button will need to be
 combined
-- Need to figure out why M603 is jumpy and why it sometimes ignores end stops (maybe analogRead?)
-- Figure out a way to normalize the value from the analogRead.
