@@ -19,7 +19,9 @@
 #define MMM_DEBUG // Comment this out to enable debug messages for MMM
 
 #ifdef MMM
+#define MMM_KNOB_MULTIPLY_ENABLE
 #define MMM_KNOB_PIN A3	// The pin for our pot, value read from pin is used as a multiplier for extrusion
+#define MMM_UPDATE_INTERVAL 50
 #endif
 
 #define STRING_VERSION_CONFIG_H __DATE__ " " __TIME__ // build date and time

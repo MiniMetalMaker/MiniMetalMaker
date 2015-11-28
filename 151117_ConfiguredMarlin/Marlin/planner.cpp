@@ -120,67 +120,73 @@ static long y_segment_time[3]={MAX_FREQ_TIME + 1,0,0};
 #endif
 
 #ifdef MMM
-int mmm_get_knob_value() {
-    return analogRead(MMM_KNOB_PIN);
 
+int knob_counter = 0;
+int knob_val = 0;
+
+int mmm_get_knob_value() {
+    if (knob_counter % MMM_UPDATE_INTERVAL == 0) {
+      knob_val = analogRead(MMM_KNOB_PIN);
+#ifdef MMM_DEBUG
+      SERIAL_ECHO_START;
+      SERIAL_ECHOPAIR("knob value: ", knob_val);
+      SERIAL_ECHOLN("");
+#endif
+    }
+
+    return knob_val;
 }
 
 float mmm_get_knob_multiplier() {
-    int knob_value = mmm_get_knob_value();
     float km = 0.01;
-    if (knob_value >= 1 && knob_value <= 123) {
+    int kv = mmm_get_knob_value();
+    if (kv >= 1 && kv <= 123) {
     	km = 1.01;
-    } else if (knob_value >= 124 && knob_value <= 223) {
+    } else if (kv >= 124 && kv <= 223) {
     	km = 1.02;
-    } else if (knob_value >= 224 && knob_value <= 323) {
+    } else if (kv >= 224 && kv <= 323) {
     	km = 1.03;
-    } else if (knob_value >= 324 && knob_value <= 423) {
-    	km = 1.04;
-    } else if (knob_value >= 424 && knob_value <= 523) {
+    } else if (kv >= 324 && kv <= 423) {
+      	km = 1.04;
+    } else if (kv >= 424 && kv <= 523) {
     	km = 1.05;
-    } else if (knob_value >= 524 && knob_value <= 623) {
-    	km = 1.06;
-    } else if (knob_value >= 624 && knob_value <= 723) {
+    } else if (kv >= 524 && kv <= 623) {
+      	km = 1.06;
+    } else if (kv >= 624 && kv <= 723) {
     	km = 1.07;
-    } else if (knob_value >= 724 && knob_value <= 823) {
-    	km = 1.08;
-    } else if (knob_value >= 824 && knob_value <= 923) {
-    	km = 1.09;
-    } else if (knob_value >= 924 && knob_value <= 1023) {
-    	km = 1.1;
+    } else if (kv >= 724 && kv <= 823) {
+      	km = 1.08;
+    } else if (kv >= 824 && kv <= 923) {
+     	km = 1.09;
+    } else if (kv >= 924 && kv <= 1023) {
+     	km = 1.1;
     }
-
-#ifdef MMM_DEBUG
-    SERIAL_ECHO_START;
-    SERIAL_ECHOPAIR("knob multiplier: ", km);
-    SERIAL_ECHOLN("");
-#endif
 
     return km;
 }
 
 int mmm_get_knob_steps() {
-    int knob_value = mmm_get_knob_value();
+    int kv = mmm_get_knob_value();
     int ks = 0;
-    if (knob_value >= 1 && knob_value <= 123) {
+    if (kv >= 1 && kv <= 123) {
     	ks = 2;
-    } else if (knob_value >= 124 && knob_value <= 223) {
+    } else if (kv >= 124 && kv <= 223) {
     	ks = 4;
-    } else if (knob_value >= 224 && knob_value <= 323) {
+    } else if (kv >= 224 && kv <= 323) {
     	ks = 8;
-    } else if (knob_value >= 324 && knob_value <= 423) {
+    } else if (kv >= 324 && kv <= 423) {
     	ks = 16;
-    } else if (knob_value >= 424 && knob_value <= 523) {
+    } else if (kv >= 424 && kv <= 523) {
     	ks = 32;
-    } else if (knob_value >= 524 && knob_value <= 623) {
+    } else if (kv >= 524 && kv <= 623) {
     	ks = 64;
-    } else if (knob_value >= 624 && knob_value <= 723) {
+    } else if (kv >= 624 && kv <= 723) {
     	ks = 128;
-    } else if (knob_value >= 724 && knob_value <= 823) {
+    } else if (kv >= 724 && kv <= 823) {
     	ks = 256;
-    } else if (knob_value >= 824 && knob_value <= 923) {
+    } else if (kv >= 824 && kv <= 923) {
     	ks = 512;
-    } else if (knob_value >= 924 && knob_value <= 1023) {
+    } else if (kv >= 924 && kv <= 1023) {
     	ks = 1024;
     }
 
@@ -677,7 +683,7 @@ block->steps_y = labs((target[X_AXIS]-position[X_AXIS]) - (target[Y_AXIS]-positi
   block->steps_e = labs(target[E_AXIS]-position[E_AXIS]);
   block->steps_e *= volumetric_multiplier[active_extruder];
   block->steps_e *= extrudemultiply;
-#ifdef MMM
+#if defined(MMM) && defined(MMM_KNOB_MULTIPLY_ENABLE)
   block->steps_e *= mmm_get_knob_multiplier();
 #endif
   block->steps_e /= 100;
