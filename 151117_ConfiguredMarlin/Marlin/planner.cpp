@@ -127,6 +127,7 @@ int knob_val = 0;
 int mmm_get_knob_value() {
     if (knob_counter % MMM_UPDATE_INTERVAL == 0) {
       knob_val = analogRead(MMM_KNOB_PIN);
+      knob_counter = 0;
 #ifdef MMM_DEBUG
       SERIAL_ECHO_START;
       SERIAL_ECHOPAIR("knob value: ", knob_val);
