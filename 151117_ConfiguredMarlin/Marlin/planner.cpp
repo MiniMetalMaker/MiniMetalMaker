@@ -141,7 +141,7 @@ int mmm_get_knob_value() {
 float mmm_get_knob_multiplier() {
     float km = 0.01;
     int kv = mmm_get_knob_value();
-    if (kv >= 1 && kv <= 123) {
+    if (kv >= 0 && kv <= 123) {
     	km = 1.01;
     } else if (kv >= 124 && kv <= 223) {
     	km = 1.02;
