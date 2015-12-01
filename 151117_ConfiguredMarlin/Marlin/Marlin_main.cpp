@@ -3744,10 +3744,10 @@ case 404:  //M404 Enter the nominal filament width (3mm, 1.75mm ) N<3.0> or disp
 
 	  // After we retract our retract value, keep retracting until we hit our extruder stop.
 	  while(!READ(E_UPSTOP_PIN)) {
-            mmm_target[E_AXIS] -= 5;
-            plan_buffer_line(mmm_target[X_AXIS], mmm_target[Y_AXIS], mmm_target[Z_AXIS], mmm_target[E_AXIS], feedrate/60, active_extruder);
+            mmm_target[E_AXIS] -= 3;
+            plan_buffer_line(mmm_target[X_AXIS], mmm_target[Y_AXIS], mmm_target[Z_AXIS], mmm_target[E_AXIS], feedrate/60, active_extruder, true);
+    	    st_synchronize();
 	  }
-    	  st_synchronize();
 
 	  /*
           if(code_seen('L'))
@@ -3789,8 +3789,8 @@ case 404:  //M404 Enter the nominal filament width (3mm, 1.75mm ) N<3.0> or disp
 	  */
 	  // 
 	  while(READ(E_PISTON_PIN)) {
-            mmm_target[E_AXIS] += 5;
-            plan_buffer_line(mmm_target[X_AXIS], mmm_target[Y_AXIS], mmm_target[Z_AXIS], mmm_target[E_AXIS], feedrate/60, active_extruder);
+            mmm_target[E_AXIS] += 3;
+            plan_buffer_line(mmm_target[X_AXIS], mmm_target[Y_AXIS], mmm_target[Z_AXIS], mmm_target[E_AXIS], feedrate/60, active_extruder, true);
     	    st_synchronize();
 	  }
 

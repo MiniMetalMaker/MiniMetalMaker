@@ -84,11 +84,17 @@ void plan_init();
 
 #ifdef ENABLE_AUTO_BED_LEVELING
 void plan_buffer_line(float x, float y, float z, const float &e, float feed_rate, const uint8_t &extruder);
+#ifdef MMM
+void plan_buffer_line(float x, float y, float z, const float &e, float feed_rate, const uint8_t &extruder, bool ignore_multiplier);
+#endif
 
 // Get the position applying the bed level matrix if enabled
 vector_3 plan_get_position();
 #else
 void plan_buffer_line(const float &x, const float &y, const float &z, const float &e, float feed_rate, const uint8_t &extruder);
+#ifdef MMM
+void plan_buffer_line(const float &x, const float &y, const float &z, const float &e, float feed_rate, const uint8_t &extruder, bool ignore_multiplier);
+#endif
 #endif // ENABLE_AUTO_BED_LEVELING
 
 // Set position. Used for G92 instructions.
