@@ -18,7 +18,7 @@ G1 Z0.7 F5000 ; lift nozzle to printing start height
 G92 Z0
 G1 Z0.5 ; raise tip enough for pressurization flow to begin
 G1 X70.000 ; offset from X to do the pressurization procedure
-G1 X0.000, F1800.000 E8.00000 ; return to home while pressurizing
+G5 X0.000, F1800.000 E8.00000 ; return to home while pressurizing
 G92 E0 ; set pressurized state as the zero reference for extruder
 M106 ; turn on fan
 ;<--end Mini Metal Maker Start Procedure -->

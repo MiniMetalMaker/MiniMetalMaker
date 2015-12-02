@@ -188,6 +188,7 @@ void calculate_delta(float cartesian[3]);
 void calculate_SCARA_forward_Transform(float f_scara[3]);
 #endif
 void prepare_move();
+void prepare_move_no_knob();
 void kill();
 void Stop();
 

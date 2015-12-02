@@ -73,6 +73,7 @@
 // G2  - CW ARC
 // G3  - CCW ARC
 // G4  - Dwell S<seconds> or P<milliseconds>
+// G5  - Same as G1 but without MMM Knob multiplier applied
 // G10 - retract filament according to settings of M207
 // G11 - retract recover filament according to settings of M208
 // G28 - Home all Axis
@@ -1366,7 +1367,6 @@ static void dock_sled(bool dock, int offset=0) {
  }
 }
 #endif
-
 void process_commands()
 {
   unsigned long codenum; //throw away variable
@@ -1427,6 +1427,14 @@ void process_commands()
         lcd_update();
       }
       break;
+     #ifdef MMM
+     case 5:
+      if(Stopped == false) {
+        get_coordinates(); // For X Y Z E F
+        prepare_move_no_knob();
+      }
+     break;
+     #endif
       #ifdef FWRETRACT
       case 10: // G10 retract
        #if EXTRUDERS > 1
@@ -4203,6 +4211,26 @@ void calculate_delta(float cartesian[3])
 }
 #endif
 
+#ifdef MMM
+void prepare_move_no_knob()
+{
+  clamp_to_software_endstops(destination);
+  previous_millis_cmd = millis();
+  
+  if( (current_position[X_AXIS] == destination [X_AXIS]) && (current_position[Y_AXIS] == destination [Y_AXIS])) {
+      plan_buffer_line(destination[X_AXIS], destination[Y_AXIS], destination[Z_AXIS], destination[E_AXIS], feedrate/60, active_extruder, true);
+  }
+  else {
+    plan_buffer_line(destination[X_AXIS], destination[Y_AXIS], destination[Z_AXIS], destination[E_AXIS], feedrate*feedmultiply/60/100.0, active_extruder, true);
+  }
+
+  for(int8_t i=0; i < NUM_AXIS; i++) {
+    current_position[i] = destination[i];
+  }
+}
+
+#endif
+
 void prepare_move()
 {
   clamp_to_software_endstops(destination);
@@ -4210,22 +4238,22 @@ void prepare_move()
   
   #ifdef SCARA //for now same as delta-code
 
-float difference[NUM_AXIS];
-for (int8_t i=0; i < NUM_AXIS; i++) {
-	difference[i] = destination[i] - current_position[i];
-}
-
-float cartesian_mm = sqrt(	sq(difference[X_AXIS]) +
-							sq(difference[Y_AXIS]) +
-							sq(difference[Z_AXIS]));
-if (cartesian_mm < 0.000001) { cartesian_mm = abs(difference[E_AXIS]); }
-if (cartesian_mm < 0.000001) { return; }
-float seconds = 6000 * cartesian_mm / feedrate / feedmultiply;
-int steps = max(1, int(scara_segments_per_second * seconds));
- //SERIAL_ECHOPGM("mm="); SERIAL_ECHO(cartesian_mm);
- //SERIAL_ECHOPGM(" seconds="); SERIAL_ECHO(seconds);
- //SERIAL_ECHOPGM(" steps="); SERIAL_ECHOLN(steps);
-for (int s = 1; s <= steps; s++) {
+  float difference[NUM_AXIS];
+  for (int8_t i=0; i < NUM_AXIS; i++) {
+  	difference[i] = destination[i] - current_position[i];
+  }
+  
+  float cartesian_mm = sqrt(	sq(difference[X_AXIS]) +
+  							sq(difference[Y_AXIS]) +
+  							sq(difference[Z_AXIS]));
+  if (cartesian_mm < 0.000001) { cartesian_mm = abs(difference[E_AXIS]); }
+  if (cartesian_mm < 0.000001) { return; }
+  float seconds = 6000 * cartesian_mm / feedrate / feedmultiply;
+  int steps = max(1, int(scara_segments_per_second * seconds));
+   //SERIAL_ECHOPGM("mm="); SERIAL_ECHO(cartesian_mm);
+   //SERIAL_ECHOPGM(" seconds="); SERIAL_ECHO(seconds);
+   //SERIAL_ECHOPGM(" steps="); SERIAL_ECHOLN(steps);
+  for (int s = 1; s <= steps; s++) {
 	float fraction = float(s) / float(steps);
 	for(int8_t i=0; i < NUM_AXIS; i++) {
 		destination[i] = current_position[i] + difference[i] * fraction;
