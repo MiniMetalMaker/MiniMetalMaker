@@ -142,25 +142,25 @@ float mmm_get_knob_multiplier() {
     float km = 1.00;
     int kv = mmm_get_knob_value();
     if (kv >= 0 && kv <= 123) {
-    	km = 1.099;
-    } else if (kv >= 124 && kv <= 223) {
-    	km = 1.199;
-    } else if (kv >= 224 && kv <= 323) {
-    	km = 1.299;
-    } else if (kv >= 324 && kv <= 423) {
-      	km = 1.399;
-    } else if (kv >= 424 && kv <= 523) {
     	km = 1.499;
-    } else if (kv >= 524 && kv <= 623) {
+    } else if (kv >= 124 && kv <= 223) {
+    	km = 1.532;
+    } else if (kv >= 224 && kv <= 323) {
+    	km = 1.566;
+    } else if (kv >= 324 && kv <= 423) {
       	km = 1.599;
+    } else if (kv >= 424 && kv <= 523) {
+    	km = 1.632;
+    } else if (kv >= 524 && kv <= 623) {
+      	km = 1.666;
     } else if (kv >= 624 && kv <= 723) {
     	km = 1.699;
     } else if (kv >= 724 && kv <= 823) {
-      	km = 1.799;
+      	km = 1.732;
     } else if (kv >= 824 && kv <= 923) {
-     	km = 1.899;
+     	km = 1.766;
     } else if (kv >= 924 && kv <= 1023) {
-     	km = 1.999;
+     	km = 1.799;
     }
 
     return km;
