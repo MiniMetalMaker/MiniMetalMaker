@@ -1294,7 +1294,11 @@ void refresh_cmd_timeout(void)
       float oldFeedrate = feedrate;
       feedrate=retract_feedrate*60;
       retracted[active_extruder]=true;
+      #ifdef MMM
+      prepare_move_no_knob();
+      #else
       prepare_move();
+      #endif
       current_position[Z_AXIS]-=retract_zlift;
 #ifdef DELTA
       calculate_delta(current_position); // change cartesian kinematic to  delta kinematic;
@@ -1302,7 +1306,11 @@ void refresh_cmd_timeout(void)
 #else
       plan_set_position(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS]);
 #endif
+      #ifdef MMM
+      prepare_move_no_knob();
+      #else
       prepare_move();
+      #endif
       feedrate = oldFeedrate;
     } else if(!retracting && retracted[active_extruder]) {
       destination[X_AXIS]=current_position[X_AXIS];
@@ -1326,7 +1334,11 @@ void refresh_cmd_timeout(void)
       float oldFeedrate = feedrate;
       feedrate=retract_recover_feedrate*60;
       retracted[active_extruder]=false;
+      #ifdef MMM
+      prepare_move_no_knob();
+      #else
       prepare_move();
+      #endif
       feedrate = oldFeedrate;
     }
   } //retract
