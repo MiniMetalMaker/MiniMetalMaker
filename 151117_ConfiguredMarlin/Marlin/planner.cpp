@@ -142,6 +142,7 @@ float mmm_get_knob_multiplier() {
     float km = 1.00;
     int kv = mmm_get_knob_value();
     if (kv >= 0 && kv <= 123) {
+<<<<<<< HEAD
     	km = 0.650;
     } else if (kv >= 124 && kv <= 223) {
     	km = 0.698;
@@ -153,14 +154,35 @@ float mmm_get_knob_multiplier() {
     	km = 0.843;
     } else if (kv >= 524 && kv <= 623) {
       	km = 0.892;
+=======
+    	km = 1.499;
+    } else if (kv >= 124 && kv <= 223) {
+    	km = 1.532;
+    } else if (kv >= 224 && kv <= 323) {
+    	km = 1.566;
+    } else if (kv >= 324 && kv <= 423) {
+      	km = 1.599;
+    } else if (kv >= 424 && kv <= 523) {
+    	km = 1.632;
+    } else if (kv >= 524 && kv <= 623) {
+      	km = 1.666;
+>>>>>>> origin/master
     } else if (kv >= 624 && kv <= 723) {
     	km = 0.940;
     } else if (kv >= 724 && kv <= 823) {
+<<<<<<< HEAD
       	km = 0.988;
     } else if (kv >= 824 && kv <= 923) {
      	km = 1.037;
     } else if (kv >= 924 && kv <= 1023) {
      	km = 1.085;
+=======
+      	km = 1.732;
+    } else if (kv >= 824 && kv <= 923) {
+     	km = 1.766;
+    } else if (kv >= 924 && kv <= 1023) {
+     	km = 1.799;
+>>>>>>> origin/master
     }
 
     return km;
