@@ -14,7 +14,7 @@ G28 ; home all axes
 G90 ; use absolute coordinates
 G92 E0
 M82 ; use absolute distances for extrusion
-G1 Z0.9 F5000 ; lift nozzle to printing start height
+G1 Z1.0 F5000 ; lift nozzle to printing start height
 G92 Z0
 G1 Z0.5 ; raise tip enough for pressurization flow to begin
 G1 X70.000 ; offset from X to do the pressurization procedure
