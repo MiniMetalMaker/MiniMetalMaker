@@ -7,10 +7,8 @@ Button Title: Into Nozzle Bath
 
 Command:
 
-G28 X
-G28 Y
-G28 Z
-G91
+G28
+G90
 G0 F1800 Z15
 G0 Y80
 G0 Z-8
@@ -54,11 +52,22 @@ Command:
 
 ______________
 
+Leveling Center
+
+Command: 
+
+G28
+G92 Z0
+G90
+G0 F1800 Z2.00
+G0 F1800 X40.00 Y40.00 
+G0 Z1.00
+______________
+
 Button Title: Leveling Position A
 
 Command:
 
-G28
 G0 F1800 Z2
 G1 X76 Y50
 G0 Z1
