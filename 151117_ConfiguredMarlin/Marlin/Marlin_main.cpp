@@ -2100,6 +2100,18 @@ void process_commands()
       autotempShutdown();
       }
       break;
+#ifdef MMM
+    case 35: // M35 
+      WRITE(UTIL_PORT_PIN, 1);
+      SERIAL_ECHO_START;
+      SERIAL_ECHOLN("Utility port ON");
+    break;
+    case 36: // M35 
+      WRITE(UTIL_PORT_PIN, 0);
+      SERIAL_ECHO_START;
+      SERIAL_ECHOLN("Utility port OFF");
+    break;
+#endif
     case 42: //M42 -Change pin status via gcode
       if (code_seen('S'))
       {

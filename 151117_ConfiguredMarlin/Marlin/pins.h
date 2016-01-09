@@ -685,6 +685,10 @@
   #if MB(RAMPS_13_EFF)
     #define HEATER_0_PIN       8
   #else
+  #ifdef MMM
+    #define UTIL_PORT_PIN	10   // No heater on a MMM, instead we have a utility port
+    #define HEATER_0_PIN       10   // EXTRUDER 1
+  #endif
     #define HEATER_0_PIN       10   // EXTRUDER 1
   #endif
 

@@ -818,6 +818,8 @@ void tp_init()
 #endif //PIDTEMPBED
   }
 
+  #ifdef MMM
+    SET_OUTPUT(UTIL_PORT_PIN);
   #if defined(HEATER_0_PIN) && (HEATER_0_PIN > -1) 
     SET_OUTPUT(HEATER_0_PIN);
   #endif  
@@ -829,6 +831,7 @@ void tp_init()
   #endif  
   #if defined(HEATER_BED_PIN) && (HEATER_BED_PIN > -1) 
     SET_OUTPUT(HEATER_BED_PIN);
+  #endif
   #endif  
   #if defined(FAN_PIN) && (FAN_PIN > -1) 
     SET_OUTPUT(FAN_PIN);
@@ -1082,8 +1085,10 @@ void disable_heater()
   #if defined(TEMP_0_PIN) && TEMP_0_PIN > -1
   target_temperature[0]=0;
   soft_pwm[0]=0;
+   #ifndef MMM
    #if defined(HEATER_0_PIN) && HEATER_0_PIN > -1  
      WRITE(HEATER_0_PIN,LOW);
+   #endif
    #endif
   #endif
      
@@ -1259,11 +1264,17 @@ ISR(TIMER0_COMPB_vect)
   if(pwm_count == 0){
     soft_pwm_0 = soft_pwm[0];
     if(soft_pwm_0 > 0) { 
+    #ifndef MMM
       WRITE(HEATER_0_PIN,1);
+    #endif
 #ifdef HEATERS_PARALLEL
       WRITE(HEATER_1_PIN,1);
 #endif
-    } else WRITE(HEATER_0_PIN,0);
+    } else {
+    #ifndef MMM
+      WRITE(HEATER_0_PIN,0);
+    #endif
+    }
     
 #if EXTRUDERS > 1
     soft_pwm_1 = soft_pwm[1];
@@ -1283,7 +1294,9 @@ ISR(TIMER0_COMPB_vect)
 #endif
   }
   if(soft_pwm_0 < pwm_count) { 
+  #ifndef MMM
     WRITE(HEATER_0_PIN,0);
+  #endif
 #ifdef HEATERS_PARALLEL
     WRITE(HEATER_1_PIN,0);
 #endif
@@ -1324,7 +1337,9 @@ ISR(TIMER0_COMPB_vect)
 	  state_timer_heater_0 = MIN_STATE_TIME;
 	}
 	state_heater_0 = 1;
+	#ifndef MMM
 	WRITE(HEATER_0_PIN, 1);
+	#endif
 #ifdef HEATERS_PARALLEL
 	WRITE(HEATER_1_PIN, 1);
 #endif
@@ -1337,7 +1352,9 @@ ISR(TIMER0_COMPB_vect)
 	  state_timer_heater_0 = MIN_STATE_TIME;
 	}
 	state_heater_0 = 0;
+	#ifndef MMM
 	WRITE(HEATER_0_PIN, 0);
+	#endif
 #ifdef HEATERS_PARALLEL
 	WRITE(HEATER_1_PIN, 0);
 #endif
@@ -1432,7 +1449,9 @@ ISR(TIMER0_COMPB_vect)
 	state_timer_heater_0 = MIN_STATE_TIME;
       }
       state_heater_0 = 0;
+      #ifndef MMM
       WRITE(HEATER_0_PIN, 0);
+      #endif
 #ifdef HEATERS_PARALLEL
       WRITE(HEATER_1_PIN, 0);
 #endif
