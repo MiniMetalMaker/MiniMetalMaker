@@ -1,97 +1,3 @@
-Custom Buttons for Printrun
-
-Paste the g-code commands after the word “Command:” into the text field for each macro when you go to create custom buttons in Printrun. Be sure to click “Save” in the macro window.
-_______________
-
-Button Title: Into Nozzle Bath
-
-Command:
-
-G28
-G90
-G0 F1800 Z15
-G0 Y80
-G0 Z5
-
-_______________
-
-Button Title: Out of Nozzle Bath
-
-Command: 
-G0 F1800 Z15
-
-_______________
-
-Button Title: Load Clay
-
-Command: 
-
-G92 E0
-G5 F50 E1
-
-
-______________
-
-Button Title: Unload Clay
-
-Command:
-G92 E0
-G5 F50 E-10
-
-______________
-
-Button Title: Utility Pwr On
-
-Command:
-
-______________
-
-Button Title: Utility Pwr Off
-
-Command:
-
-______________
-
-Leveling Center
-
-Command: 
-
-G28
-G92 Z0
-G90
-G0 F1800 Z2.00
-G0 F1800 X40.00 Y40.00 
-G0 Z1.00
-______________
-
-Button Title: Leveling Position A
-
-Command:
-
-G0 F1800 Z2
-G1 X76 Y50
-G0 Z1
-______________
-
-Button Title: Leveling Position B
-
-Command:
-
-G0 F1800 Z2
-G1 X76 Y81
-G0 Z1
-
-______________
-
-Button Title: Leveling Position C
-
-Command:
-
-G0 F1800 Z2
-G1 X49 Y81
-G0 Z1
-
-______________
-
+Button Title: Into Nozzle BathCommand:G28G90G0 F1800 Z15G0 Y80G0 Z5_______________Button Title: Out of Nozzle BathCommand: G0 F1800 Z15_______________Button Title: Load ClayCommand: G92 E0G5 F50 E1______________Button Title: Unload ClayCommand:G92 E0G5 F50 E-10______________Button Title: Utility Pwr OnCommand:M35______________Button Title: Utility Pwr OffCommand:M36Button Title: Leveling CenterCommand: G28G92 Z0G90G0 F1800 Z2.00G0 F1800 X40.00 Y40.00 G0 Z1.00______________Button Title: Leveling Position ACommand:G0 F1800 Z2G1 X76 Y50G0 Z1______________Button Title: Leveling Position BCommand:G0 F1800 Z2G1 X76 Y81G0 Z1______________Button Title: Leveling Position CCommand:G0 F1800 Z2G1 X49 Y81G0 Z1______________
 
 
